@@ -22,7 +22,7 @@ public class RestaurantsActivity extends AppCompatActivity {
             "Life of Pie", "Screen Door", "Luc Lac", "Sweet Basil",
             "Slappy Cakes", "Equinox", "Miss Delta's", "Andina",
             "Lardo", "Portland City Grill", "Fat Head's Brewery",
-            "Chipotle", "Subway"};
+            "Chipotle", "Taco Bell"};
 
 
     @Override
@@ -39,13 +39,11 @@ public class RestaurantsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String restaurant = ((TextView)view).getText().toString();
                 Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG).show();
-                Log.v(TAG, "In the onItemClickListener!");
             }
         });
 
         Intent intent = getIntent();
         String location = intent.getStringExtra("location");
         mLocationTextView.setText("Here are all the restaurants EVER: " + location);
-        Log.d(TAG, "In the onCreate method!");
     }
 }
