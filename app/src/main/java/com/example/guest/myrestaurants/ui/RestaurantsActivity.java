@@ -1,4 +1,4 @@
-package com.example.guest.myrestaurants;
+package com.example.guest.myrestaurants.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,13 +7,17 @@ import android.os.Bundle;
 import okhttp3.Call;
 import okhttp3.Callback;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.guest.myrestaurants.R;
+import com.example.guest.myrestaurants.adapters.RestaurantListAdapter;
+import com.example.guest.myrestaurants.models.Restaurant;
+import com.example.guest.myrestaurants.services.YelpService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,11 +29,10 @@ import okhttp3.Response;
 public class RestaurantsActivity extends AppCompatActivity {
     public static final String TAG = RestaurantsActivity.class.getSimpleName();
 
-    @Bind(R.id.locationTextView) TextView mLocationTextView;
-    @Bind(R.id.listView) ListView mListView;
+    @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
+    private RestaurantListAdapter mAdapter;
 
     public ArrayList<Restaurant> mRestaurants = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,25 +40,16 @@ public class RestaurantsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurants);
         ButterKnife.bind(this);
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, restaurants);
-        mListView.setAdapter(adapter);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String restaurant = ((TextView)view).getText().toString();
-                Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG).show();
-            }
-        });
-
         Intent intent = getIntent();
         String location = intent.getStringExtra("location");
-        mLocationTextView.setText("Here are all the restaurants: " + location);
+
         getRestaurants(location);
+        Log.v(TAG, "LOCATION: " + location);
     }
 
     private void getRestaurants(String location) {
         final YelpService yelpService = new YelpService();
+
         yelpService.findRestaurants(location, new Callback() {
 
             @Override
@@ -64,16 +58,22 @@ public class RestaurantsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String jsonData = response.body().string();
-                    if (response.isSuccessful()) {
-                        Log.v(TAG, jsonData);
-                        mRestaurants = yelpService.processResults(response);
+            public void onResponse(Call call, Response response) {
+                mRestaurants = yelpService.processResults(response);
+                Log.v(TAG, "RESPONSE SIZE: " + mRestaurants.size());
+
+                RestaurantsActivity.this.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        mAdapter = new RestaurantListAdapter(getApplicationContext(), mRestaurants);
+                        mRecyclerView.setAdapter(mAdapter);
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(RestaurantsActivity.this);
+                        mRecyclerView.setLayoutManager(layoutManager);
+                        mRecyclerView.setHasFixedSize(true);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                });
             }
         });
     }

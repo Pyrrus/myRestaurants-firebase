@@ -1,10 +1,7 @@
-package com.example.guest.myrestaurants;
+package com.example.guest.myrestaurants.models;
 
 import java.util.ArrayList;
 
-/**
- * Created by calebpaul on 11/24/16.
- */
 public class Restaurant {
     private String mName;
     private String mPhone;

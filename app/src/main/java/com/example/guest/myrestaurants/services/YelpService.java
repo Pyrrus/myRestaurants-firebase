@@ -1,4 +1,9 @@
-package com.example.guest.myrestaurants;
+package com.example.guest.myrestaurants.services;
+
+import android.util.Log;
+
+import com.example.guest.myrestaurants.Constants;
+import com.example.guest.myrestaurants.models.Restaurant;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,10 +21,10 @@ import okhttp3.Response;
 import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer;
 import se.akerfeldt.okhttp.signpost.SigningInterceptor;
 
-/**
- * Created by calebpaul on 11/24/16.
- */
 public class YelpService {
+
+    public static final String TAG = YelpService.class.getSimpleName();
+
     public static void findRestaurants(String location, Callback callback) {
         OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(Constants.YELP_CONSUMER_KEY, Constants.YELP_CONSUMER_SECRET);
         consumer.setTokenWithSecret(Constants.YELP_TOKEN, Constants.YELP_TOKEN_SECRET);
@@ -37,6 +42,7 @@ public class YelpService {
                 .build();
 
         Call call = client.newCall(request);
+        Log.v(TAG, "REQUEST: " + url);
         call.enqueue(callback);
     }
 
@@ -45,6 +51,7 @@ public class YelpService {
 
         try {
             String jsonData = response.body().string();
+            Log.v(TAG, "RESPONSE BOOL: " + response.isSuccessful());
             if (response.isSuccessful()) {
                 JSONObject yelpJSON = new JSONObject(jsonData);
                 JSONArray businessesJSON = yelpJSON.getJSONArray("businesses");
@@ -82,6 +89,7 @@ public class YelpService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.v(TAG, "YELP RESTAURANTS: " + restaurants.size());
         return restaurants;
     }
 }
