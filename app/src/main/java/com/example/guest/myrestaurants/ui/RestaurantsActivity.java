@@ -10,9 +10,6 @@ import okhttp3.Callback;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.guest.myrestaurants.R;
 import com.example.guest.myrestaurants.adapters.RestaurantListAdapter;
@@ -60,7 +57,6 @@ public class RestaurantsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) {
                 mRestaurants = yelpService.processResults(response);
-                Log.v(TAG, "RESPONSE SIZE: " + mRestaurants.size());
 
                 RestaurantsActivity.this.runOnUiThread(new Runnable() {
 
