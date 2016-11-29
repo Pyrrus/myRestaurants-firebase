@@ -45,7 +45,6 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     @Override
     public int getItemCount() {
-        Log.v(TAG, "NUM OF RESTAURANTS: " + String.valueOf(mRestaurants.size()));
         return mRestaurants.size();
     }
 
