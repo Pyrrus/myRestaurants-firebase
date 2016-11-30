@@ -1,5 +1,7 @@
 package com.example.guest.myrestaurants.models;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 
 @Parcel
@@ -13,6 +15,8 @@ public class Restaurant {
     private double mLatitude;
     private double mLongitude;
     private ArrayList<String> mCategories = new ArrayList<>();
+
+    public Restaurant() {}
 
     public Restaurant(String name, String phone, String website,
                       double rating, String imageUrl, ArrayList<String> address,
