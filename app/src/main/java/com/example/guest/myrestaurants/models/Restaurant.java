@@ -2,6 +2,7 @@ package com.example.guest.myrestaurants.models;
 
 import java.util.ArrayList;
 
+@Parcel
 public class Restaurant {
     private String mName;
     private String mPhone;
