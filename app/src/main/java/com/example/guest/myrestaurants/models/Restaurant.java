@@ -19,6 +19,7 @@ public class Restaurant {
     String index;
     private String pushId;
 
+
     public Restaurant() {}
 
     public Restaurant(String name, String phone, String website,
